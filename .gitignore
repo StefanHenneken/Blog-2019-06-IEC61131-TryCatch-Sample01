@@ -18,7 +18,6 @@ _Boot
 *.compiled-library
 *.project.~u
 
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
