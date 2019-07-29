@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="F_Calc" Id="{3d04b171-97dd-42e3-954d-623f24b79c5c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Calc : LREAL
+VAR_INPUT
+	pData		: POINTER TO ARRAY [0..9] OF LREAL;
+	nElementA	: INT;
+	nElementB 	: INT;
+END_VAR
+VAR
+	exc			: __SYSTEM.ExceptionCode;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[__TRY
+	F_Calc := pData^[nElementA] / pData^[nElementB];
+__CATCH (exc)
+	IF (exc = __SYSTEM.ExceptionCode.RTSEXCPT_ARRAYBOUNDS) THEN
+		F_Calc := -1;
+    ELSIF ((exc = __SYSTEM.ExceptionCode.RTSEXCPT_FPU_DIVIDEBYZERO) OR
+	       (exc = __SYSTEM.ExceptionCode.RTSEXCPT_DIVIDEBYZERO)) THEN
+		F_Calc := -2;
+	ELSIF (exc = __SYSTEM.ExceptionCode.RTSEXCPT_ACCESS_VIOLATION) THEN
+		F_Calc := -3;
+	ELSE
+		F_Calc := -4;
+	END_IF
+__FINALLY
+	F_Calc := F_Calc + 1;
+__ENDTRY
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_Calc">
+      <LineId Id="59" Count="4" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="64" Count="6" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
